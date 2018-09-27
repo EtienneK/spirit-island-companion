@@ -1,8 +1,8 @@
 import * as React from 'react';
 import './App.css';
-
+import './spirit-island-card-katalog/src/types';
 // tslint:disable-next-line
-import { DB } from '../spirit-island-card-katalog/src/db';
+import { DB } from './spirit-island-card-katalog/src/db';
 
 import logo from './logo.svg';
 

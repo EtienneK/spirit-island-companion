@@ -1,0 +1,3 @@
+[submodule "src/spirit-island-card-katalog"]
+	path = src/spirit-island-card-katalog
+	url = git@github.com:EtienneK/spirit-island-card-katalog.git
