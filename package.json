@@ -14,13 +14,15 @@
     "react-redux": "^5.0.7",
     "react-scripts-ts": "2.17.0",
     "reactstrap": "^6.4.0",
+    "serve": "^10.0.2",
     "typesafe-actions": "^2.0.4"
   },
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start-js": "react-scripts-ts start",
-    "start": "npm-run-all -p watch-css start-js",
+    "start-dev": "npm-run-all -p watch-css start-js",
+    "start": "serve -s build",
     "build": "npm run build-css && react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
