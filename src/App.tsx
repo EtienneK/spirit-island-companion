@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FaGithub, FaHeart } from 'react-icons/fa';
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import './spirit-island-card-katalog/src/types';
@@ -49,9 +50,22 @@ class App extends React.Component<{}, IState> {
         </Modal>
         <footer>
           <hr />
-          <small className="text-muted">"Spirit Island Companion App" is an unofficial web application and is
-          not affiliated with Greater Than Games, LLC in any way.
-          Spirit Island art, text and other assets belong to Greater Than Games, LLC.</small>
+          <div className="text-muted">
+            <p>
+              <small><a href="#"><FaGithub className="align-baseline" /> Fork me on Github</a></small>
+            </p>
+            <p>
+              <small><a href="http://www.etiennek.com">Made with <FaHeart className="align-middle" /> by Etienne Koekemoer</a></small>
+            </p>
+
+            <p style={{ marginTop: '20px' }}>
+              <small>
+                "Spirit Island Companion App" is an unofficial web application and is
+                not affiliated with Greater Than Games, LLC in any way.
+                Spirit Island art, text and other assets belong to Greater Than Games, LLC.
+              </small>
+            </p>
+          </div>
         </footer>
       </div>
     );
