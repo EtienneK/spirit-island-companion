@@ -3,10 +3,9 @@ import { FaGithub, FaHeart } from 'react-icons/fa';
 import { connect } from 'react-redux'
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { AnyAction, Dispatch } from 'redux';
-import { action } from 'typesafe-actions';
 
 import { IRootState } from './redux';
-import { TOGGLE_PLAYER_NUMBER_SELECT_MODAL } from './redux/actions';
+import * as NewGameFlowActions from './redux/newGameFlow/actions';
 
 import './spirit-island-card-katalog/src/types';
 // tslint:disable-next-line
@@ -80,7 +79,7 @@ const mapStateToProps = (state: IRootState): IStateProps => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
-  toggleModal: () => dispatch(action(TOGGLE_PLAYER_NUMBER_SELECT_MODAL))
+  toggleModal: () => dispatch(NewGameFlowActions.toggleModal())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
