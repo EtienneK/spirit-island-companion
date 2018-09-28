@@ -1,0 +1,16 @@
+$primary: #659a42;
+$secondary: #507296;
+
+$body-bg: #fdfcea;
+$body-color: #444;
+
+$list-group-bg: $body-bg;
+$modal-content-bg: $body-bg;
+
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Reem Kufi', sans-serif;
+}

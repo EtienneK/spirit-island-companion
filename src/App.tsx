@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
-import './App.css';
 import './spirit-island-card-katalog/src/types';
 // tslint:disable-next-line
 // import { DB } from './spirit-island-card-katalog/src/db';
