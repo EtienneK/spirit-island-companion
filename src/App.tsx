@@ -5,6 +5,7 @@ import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalH
 import { AnyAction, Dispatch } from 'redux';
 
 import { IRootState } from './redux';
+import * as DataActions from './redux/data/actions';
 import * as NewGameFlowActions from './redux/newGameFlow/actions';
 
 import './spirit-island-card-katalog/src/types';
@@ -13,10 +14,12 @@ import './spirit-island-card-katalog/src/types';
 
 interface IStateProps {
   modalIsOpen: boolean;
+  playerNumberSelected?: number;
 }
 
 interface IDispatchProps {
   toggleModal: () => void;
+  selectNumberOfPlayers: (numberOfPlayers: number) => void;
 }
 
 class App extends React.Component<IStateProps & IDispatchProps> {
@@ -37,16 +40,16 @@ class App extends React.Component<IStateProps & IDispatchProps> {
           <ModalHeader toggle={this.props.toggleModal}>How many players?</ModalHeader>
           <ModalBody>
             <ListGroup>
-              <ListGroupItem tag="button" action={true}>1 player</ListGroupItem>
-              <ListGroupItem tag="button" action={true}>2 Players</ListGroupItem>
-              <ListGroupItem tag="button" action={true}>3 players</ListGroupItem>
-              <ListGroupItem tag="button" action={true}>4 players</ListGroupItem>
-              <ListGroupItem tag="button" action={true}>5 players</ListGroupItem>
-              <ListGroupItem tag="button" action={true}>6 players</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(1)} onClick={this.selectNumberOfPlayers(1)} tag="button" action={true}>1 player</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(2)} onClick={this.selectNumberOfPlayers(2)} tag="button" action={true}>2 Players</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(3)} onClick={this.selectNumberOfPlayers(3)} tag="button" action={true}>3 players</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(4)} onClick={this.selectNumberOfPlayers(4)} tag="button" action={true}>4 players</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(5)} onClick={this.selectNumberOfPlayers(5)} tag="button" action={true}>5 players</ListGroupItem>
+              <ListGroupItem active={this.playerNumberIsActive(6)} onClick={this.selectNumberOfPlayers(6)} tag="button" action={true}>6 players</ListGroupItem>
             </ListGroup>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" disabled={true} onClick={this.props.toggleModal}>Create New Game</Button>
+            <Button color="primary" disabled={!this.props.playerNumberSelected} onClick={this.props.toggleModal}>Create New Game</Button>
             <Button color="secondary" onClick={this.props.toggleModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
@@ -72,13 +75,21 @@ class App extends React.Component<IStateProps & IDispatchProps> {
       </div>
     );
   }
+
+  private playerNumberIsActive = (playerNumber: number) =>
+    this.props.playerNumberSelected === playerNumber;
+  private selectNumberOfPlayers = (numberOfPlayers: number) =>
+    () => this.props.selectNumberOfPlayers(numberOfPlayers);
+
 }
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
-  modalIsOpen: state.newGameFlow.modalIsOpen
+  modalIsOpen: state.newGameFlow.modalIsOpen,
+  playerNumberSelected: state.data.numberOfPlayers
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
+  selectNumberOfPlayers: (numberOfPlayers) => dispatch(DataActions.selectNumberOfPlayers(numberOfPlayers)),
   toggleModal: () => dispatch(NewGameFlowActions.toggleModal())
 });
 
