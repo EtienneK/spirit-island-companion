@@ -1,20 +1,28 @@
-import { Action, AnyAction, Reducer } from "redux";
+import { AnyAction, combineReducers, Reducer } from "redux";
 import * as Actions from './actions';
 
-export interface IRootState {
-  playerNumberSelectModalIsOpen: boolean;
+interface INewGameFlowState {
+  modalIsOpen: boolean;
 }
 
-const initialState: IRootState = {
-  playerNumberSelectModalIsOpen: false
-};
+export interface IRootState {
+  newGameFlow: INewGameFlowState;
+}
 
-export const rootReducer: Reducer<IRootState, AnyAction> =
-  (state = initialState, action: Action<any>) => {
+const newGameFlow: Reducer<INewGameFlowState, AnyAction> =
+  (
+    state = {
+      modalIsOpen: false
+    },
+    action: AnyAction
+  ) => {
     switch (action.type) {
       case Actions.TOGGLE_PLAYER_NUMBER_SELECT_MODAL:
-        return { ...state, playerNumberSelectModalIsOpen: !state.playerNumberSelectModalIsOpen };
+        return { ...state, modalIsOpen: !state.modalIsOpen };
     }
-
     return state;
   };
+
+export const rootReducer: Reducer<IRootState, AnyAction> = combineReducers({
+  newGameFlow
+});

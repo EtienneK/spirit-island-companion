@@ -76,7 +76,7 @@ class App extends React.Component<IStateProps & IDispatchProps> {
 }
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
-  modalIsOpen: state.playerNumberSelectModalIsOpen
+  modalIsOpen: state.newGameFlow.modalIsOpen
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
