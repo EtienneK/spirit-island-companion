@@ -37,8 +37,9 @@ class App extends React.Component<IStateProps & IDispatchProps> {
           Create New Game
         </Button>
         <Modal isOpen={this.props.modalIsOpen} toggle={this.props.toggleModal}>
-          <ModalHeader toggle={this.props.toggleModal}>How many players?</ModalHeader>
+          <ModalHeader toggle={this.props.toggleModal}>Create new game</ModalHeader>
           <ModalBody>
+            <h5>How many players?</h5>
             <ListGroup>
               <ListGroupItem active={this.playerNumberIsActive(1)} onClick={this.selectNumberOfPlayers(1)} tag="button" action={true}>1 player</ListGroupItem>
               <ListGroupItem active={this.playerNumberIsActive(2)} onClick={this.selectNumberOfPlayers(2)} tag="button" action={true}>2 Players</ListGroupItem>
@@ -47,9 +48,11 @@ class App extends React.Component<IStateProps & IDispatchProps> {
               <ListGroupItem active={this.playerNumberIsActive(5)} onClick={this.selectNumberOfPlayers(5)} tag="button" action={true}>5 players</ListGroupItem>
               <ListGroupItem active={this.playerNumberIsActive(6)} onClick={this.selectNumberOfPlayers(6)} tag="button" action={true}>6 players</ListGroupItem>
             </ListGroup>
+            <h5 style={{ marginTop: '20px' }}>Which expansions?</h5>
+            <em>Only the base game is supported at this moment. Expansion support is coming soon...</em>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" disabled={!this.props.playerNumberSelected} onClick={this.props.toggleModal}>Create New Game</Button>
+            <Button color="primary" disabled={!this.props.playerNumberSelected} onClick={this.props.toggleModal}>Create</Button>
             <Button color="secondary" onClick={this.props.toggleModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
