@@ -1,38 +1,41 @@
 import * as React from 'react';
 import { FaGithub, FaHeart } from 'react-icons/fa';
+import { connect } from 'react-redux'
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { AnyAction, Dispatch } from 'redux';
+import { action } from 'typesafe-actions';
+
+import { IRootState } from './redux';
+import { TOGGLE_PLAYER_NUMBER_SELECT_MODAL } from './redux/actions';
 
 import './spirit-island-card-katalog/src/types';
 // tslint:disable-next-line
 // import { DB } from './spirit-island-card-katalog/src/db';
 
-interface IState {
+interface IStateProps {
   modalIsOpen: boolean;
 }
 
-class App extends React.Component<{}, IState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      modalIsOpen: false
-    };
-  }
+interface IDispatchProps {
+  toggleModal: () => void;
+}
 
+class App extends React.Component<IStateProps & IDispatchProps> {
   public render() {
     return (
       <div className="container text-center">
         <img style={{ marginTop: '20px' }} src="images/Spirit-Island-Logo.png" className="img-fluid" alt="Spirit Island" />
         <h1 style={{ marginTop: '-20px' }}>Companion App</h1>
         <Button
-          onClick={this.toggleModal}
+          onClick={this.props.toggleModal}
           style={{ padding: '30px', margin: '30px' }}
           color="primary"
           size="lg"
         >
           Create New Game
         </Button>
-        <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}>How many players?</ModalHeader>
+        <Modal isOpen={this.props.modalIsOpen} toggle={this.props.toggleModal}>
+          <ModalHeader toggle={this.props.toggleModal}>How many players?</ModalHeader>
           <ModalBody>
             <ListGroup>
               <ListGroupItem tag="button" action={true}>1 player</ListGroupItem>
@@ -44,8 +47,8 @@ class App extends React.Component<{}, IState> {
             </ListGroup>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" disabled={true} onClick={this.toggleModal}>Create New Game</Button>
-            <Button color="secondary" onClick={this.toggleModal}>Cancel</Button>
+            <Button color="primary" disabled={true} onClick={this.props.toggleModal}>Create New Game</Button>
+            <Button color="secondary" onClick={this.props.toggleModal}>Cancel</Button>
           </ModalFooter>
         </Modal>
         <footer>
@@ -70,8 +73,14 @@ class App extends React.Component<{}, IState> {
       </div>
     );
   }
-
-  public toggleModal = () => this.setState({ modalIsOpen: !this.state.modalIsOpen });
 }
 
-export default App;
+const mapStateToProps = (state: IRootState): IStateProps => ({
+  modalIsOpen: state.playerNumberSelectModalIsOpen
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
+  toggleModal: () => dispatch(action(TOGGLE_PLAYER_NUMBER_SELECT_MODAL))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
