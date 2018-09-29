@@ -6,7 +6,7 @@ import * as fearImage from './spirit-island-card-katalog/imgs/symbols/fear.jpg';
 interface IProps {
   fearPool: number;
   fearGenerated: number;
-  addFear: () => void;
+  addFear: (fearToBeAdded: number) => void;
 }
 
 export default class FearPool extends React.Component<IProps> {
@@ -33,11 +33,7 @@ export default class FearPool extends React.Component<IProps> {
 
   private readonly addFear = (amount: number) => {
     const { addFear } = this.props;
-    return () => {
-      for (let i = 0; i < amount; ++i) {
-        addFear();
-      }
-    }
+    return () => addFear(amount);
   }
 
   private readonly getFearSymbols = (amount: number) => {

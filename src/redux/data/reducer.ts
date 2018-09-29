@@ -1,4 +1,5 @@
 import { AnyAction, Reducer } from 'redux';
+import undoable from 'redux-undo';
 import { getType } from 'typesafe-actions';
 import * as Actions from './actions';
 import IDataState from './state';
@@ -19,14 +20,20 @@ const newGameFlow: Reducer<IDataState, AnyAction> =
   ) => {
     switch (action.type) {
       case getType(Actions.addFear):
+        const amount: number = action.payload;
         let { fearGenerated, fearPool } = state;
-        fearPool--;
-        fearGenerated++;
-        if (fearPool === 0) {
-          fearPool = getStartingFear(state.numberOfPlayers!);
-          fearGenerated = 0;
-          // TODO: Add Fear Card
+        const startingFear = getStartingFear(state.numberOfPlayers!);
+
+        for (let i = 0; i < amount; ++i) {
+          fearPool--;
+          fearGenerated++;
+          if (fearPool === 0) {
+            fearPool = startingFear;
+            fearGenerated = 0;
+            // TODO: Add Fear Card
+          }
         }
+
         return {
           ...state,
           fearGenerated,
@@ -44,4 +51,4 @@ const newGameFlow: Reducer<IDataState, AnyAction> =
     return state;
   };
 
-export default newGameFlow;
+export default undoable(newGameFlow);

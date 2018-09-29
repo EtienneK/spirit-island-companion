@@ -3,6 +3,7 @@ import { FaGithub, FaHeart } from 'react-icons/fa';
 import { connect } from 'react-redux'
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { AnyAction, Dispatch } from 'redux';
+import { ActionCreators } from 'redux-undo';
 
 import { IRootState } from './redux';
 import * as DataActions from './redux/data/actions';
@@ -18,6 +19,7 @@ interface IStateProps {
 }
 
 interface IDispatchProps {
+  clearHistory: () => void;
   selectNumberOfPlayers: (numberOfPlayers: number) => void;
   startGame: () => void;
   toggleModal: () => void;
@@ -83,6 +85,7 @@ class Home extends React.Component<IStateProps & IDispatchProps> {
   private readonly createGame = () => {
     this.props.startGame();
     this.props.toggleModal();
+    this.props.clearHistory();
   };
 
   private readonly playerNumberIsActive = (playerNumber: number) =>
@@ -94,10 +97,11 @@ class Home extends React.Component<IStateProps & IDispatchProps> {
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
   modalIsOpen: state.newGameFlow.modalIsOpen,
-  playerNumberSelected: state.data.numberOfPlayers
+  playerNumberSelected: state.data.present.numberOfPlayers
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
+  clearHistory: () => dispatch(ActionCreators.clearHistory()),
   selectNumberOfPlayers: (numberOfPlayers) => dispatch(DataActions.selectNumberOfPlayers(numberOfPlayers)),
   startGame: () => dispatch(DataActions.toggleGameStart()),
   toggleModal: () => dispatch(NewGameFlowActions.toggleModal()),

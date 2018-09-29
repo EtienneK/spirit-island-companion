@@ -29,7 +29,7 @@ class App extends React.Component<IStateProps> {
 }
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
-  gameStarted: state.data.gameStarted
+  gameStarted: state.data.present.gameStarted
 });
 
 export default connect(mapStateToProps)(App);
