@@ -5,20 +5,26 @@ import { Button, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Nav
 import { AnyAction, Dispatch } from 'redux';
 import { ActionCreators } from 'redux-undo';
 
+import FearDeck from './FearDeck';
 import FearPool from './FearPool';
 import { IRootState } from './redux';
 import * as DataActions from './redux/data/actions';
+import { Types } from './spirit-island-card-katalog/src/types'
 
 interface IStateProps {
-  fearPool: number;
-  fearGenerated: number;
-  undoDisabled: boolean;
+  readonly fearPool: number;
+  readonly fearGenerated: number;
+  readonly fearDeck: ReadonlyArray<Types.FearCard>;
+  readonly fearEarned: ReadonlyArray<Types.FearCard>;
+  readonly fearDiscarded: ReadonlyArray<Types.FearCard>;
+  readonly gameEnded: boolean;
+  readonly undoDisabled: boolean;
 }
 
 interface IDispatchProps {
-  addFear: (fearToBeAdded: number) => void;
-  endGameConfirm: () => void;
-  undo: () => void;
+  readonly addFear: (fearToBeAdded: number) => void;
+  readonly endGameConfirm: () => void;
+  readonly undo: () => void;
 }
 
 interface IState {
@@ -53,8 +59,8 @@ class Game extends React.Component<IStateProps & IDispatchProps, IState> {
         <Container className="p-1">
           <Row>
             <Col>
-              One of three columns
-          </Col>
+              <FearDeck {...this.props} />
+            </Col>
             <Col>
               <FearPool {...this.props} />
             </Col>
@@ -84,8 +90,12 @@ class Game extends React.Component<IStateProps & IDispatchProps, IState> {
 }
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
+  fearDeck: state.data.present.fearDeck,
+  fearDiscarded: state.data.present.fearDiscarded,
+  fearEarned: state.data.present.fearEarned,
   fearGenerated: state.data.present.fearGenerated,
   fearPool: state.data.present.fearPool,
+  gameEnded: state.data.present.gameEnded,
   undoDisabled: state.data.past.length === 0
 });
 

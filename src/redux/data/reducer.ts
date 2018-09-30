@@ -5,8 +5,12 @@ import * as Actions from './actions';
 import IDataState from './state';
 
 const initialState: IDataState = {
+  fearDeck: [],
+  fearDiscarded: [],
+  fearEarned: [],
   fearGenerated: 0,
   fearPool: 0,
+  gameEnded: false,
   gameStarted: false,
   numberOfPlayers: undefined,
 };
@@ -19,6 +23,10 @@ const newGameFlow: Reducer<IDataState, AnyAction> = (state = initialState, actio
   switch (action.type) {
     case 'RESET':
       return initialState;
+
+    case getType(Actions.endGame):
+      return { ...state, gameEnded: true };
+
     case getType(Actions.addFear):
       const amount: number = action.payload;
       let { fearGenerated, fearPool } = state;
@@ -39,14 +47,17 @@ const newGameFlow: Reducer<IDataState, AnyAction> = (state = initialState, actio
         fearGenerated,
         fearPool
       };
+
     case getType(Actions.selectNumberOfPlayers):
       return { ...state, numberOfPlayers: action.payload };
+
     case getType(Actions.toggleGameStart):
       return {
         ...state,
         fearPool: getStartingFear(state.numberOfPlayers!),
         gameStarted: !state.gameStarted
       };
+
   }
   return state;
 };
