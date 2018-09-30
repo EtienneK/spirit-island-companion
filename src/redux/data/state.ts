@@ -9,4 +9,5 @@ export default interface IDataState {
   readonly gameStarted: boolean;
   readonly gameEnded: boolean;
   readonly numberOfPlayers?: number;
+  readonly sets: ReadonlySet<Types.ProductSet>
 }

@@ -1,7 +1,11 @@
 import { AnyAction, Reducer } from 'redux';
 import undoable from 'redux-undo';
 import { getType } from 'typesafe-actions';
+import * as _ from 'underscore';
+
+import { Types } from '../../spirit-island-card-katalog/src/types';
 import * as Actions from './actions';
+import { IInitGame } from './models';
 import IDataState from './state';
 
 const initialState: IDataState = {
@@ -13,6 +17,7 @@ const initialState: IDataState = {
   gameEnded: false,
   gameStarted: false,
   numberOfPlayers: undefined,
+  sets: new Set([Types.ProductSet.Basegame])
 };
 
 function getStartingFear(numberOfPlayers: number) {
@@ -21,15 +26,22 @@ function getStartingFear(numberOfPlayers: number) {
 
 const newGameFlow: Reducer<IDataState, AnyAction> = (state = initialState, action) => {
   switch (action.type) {
-    case 'RESET':
+    case 'RESET': {
       return initialState;
+    }
 
-    case getType(Actions.endGame):
+    case getType(Actions.initGame): {
+      const { fearDeck } = action.payload as IInitGame;
+      return { ...state, fearDeck };
+    }
+
+    case getType(Actions.endGame): {
       return { ...state, gameEnded: true };
+    }
 
-    case getType(Actions.addFear):
+    case getType(Actions.addFear): {
       const amount: number = action.payload;
-      let { fearGenerated, fearPool } = state;
+      let { fearDeck, fearEarned, fearGenerated, fearPool, gameEnded } = state;
       const startingFear = getStartingFear(state.numberOfPlayers!);
 
       for (let i = 0; i < amount; ++i) {
@@ -38,26 +50,37 @@ const newGameFlow: Reducer<IDataState, AnyAction> = (state = initialState, actio
         if (fearPool === 0) {
           fearPool = startingFear;
           fearGenerated = 0;
-          // TODO: Add Fear Card
+          // Add a fear card to earned fear
+          fearEarned = [...fearEarned, fearDeck[0]];
+          fearDeck = _.last(state.fearDeck, state.fearDeck.length - 1);
+          if (fearDeck.length === 0) {
+            gameEnded = true;
+            break;
+          }
         }
       }
 
       return {
         ...state,
+        fearDeck,
+        fearEarned,
         fearGenerated,
-        fearPool
+        fearPool,
+        gameEnded
       };
+    }
 
-    case getType(Actions.selectNumberOfPlayers):
+    case getType(Actions.selectNumberOfPlayers): {
       return { ...state, numberOfPlayers: action.payload };
+    }
 
-    case getType(Actions.toggleGameStart):
+    case getType(Actions.toggleGameStart): {
       return {
         ...state,
         fearPool: getStartingFear(state.numberOfPlayers!),
         gameStarted: !state.gameStarted
       };
-
+    }
   }
   return state;
 };

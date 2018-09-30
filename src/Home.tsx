@@ -4,23 +4,25 @@ import { connect } from 'react-redux'
 import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { AnyAction, Dispatch } from 'redux';
 import { ActionCreators } from 'redux-undo';
+import * as _ from 'underscore';
 
 import { IRootState } from './redux';
 import * as DataActions from './redux/data/actions';
+import { IInitGame } from './redux/data/models';
 import * as NewGameFlowActions from './redux/newGameFlow/actions';
-
-// import './spirit-island-card-katalog/src/types';
-// tslint:disable-next-line
-// import { DB } from './spirit-island-card-katalog/src/db';
+import { DB } from './spirit-island-card-katalog/src/db';
+import { Types } from './spirit-island-card-katalog/src/types';
 
 interface IStateProps {
-  modalIsOpen: boolean;
-  playerNumberSelected?: number;
+  readonly modalIsOpen: boolean;
+  readonly playerNumberSelected?: number;
+  readonly sets: ReadonlySet<Types.ProductSet>;
 }
 
 interface IDispatchProps {
   clearHistory: () => void;
   selectNumberOfPlayers: (numberOfPlayers: number) => void;
+  initGame: (payload: IInitGame) => void;
   startGame: () => void;
   toggleModal: () => void;
 }
@@ -82,7 +84,18 @@ class Home extends React.Component<IStateProps & IDispatchProps> {
     );
   }
 
+  private readonly initGame = () => {
+    const { initGame, sets } = this.props;
+    const fearDeck = _.first(
+      _.shuffle(
+        DB.CARDS.filter(card => card instanceof Types.FearCard && sets.has(card.set))
+      )
+      , 9) as ReadonlyArray<Types.FearCard>;
+    initGame({ fearDeck });
+  };
+
   private readonly createGame = () => {
+    this.initGame();
     this.props.startGame();
     this.props.toggleModal();
     this.props.clearHistory();
@@ -97,11 +110,13 @@ class Home extends React.Component<IStateProps & IDispatchProps> {
 
 const mapStateToProps = (state: IRootState): IStateProps => ({
   modalIsOpen: state.newGameFlow.modalIsOpen,
-  playerNumberSelected: state.data.present.numberOfPlayers
+  playerNumberSelected: state.data.present.numberOfPlayers,
+  sets: state.data.present.sets
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>): IDispatchProps => ({
   clearHistory: () => dispatch(ActionCreators.clearHistory()),
+  initGame: (payload) => dispatch(DataActions.initGame(payload)),
   selectNumberOfPlayers: (numberOfPlayers) => dispatch(DataActions.selectNumberOfPlayers(numberOfPlayers)),
   startGame: () => dispatch(DataActions.toggleGameStart()),
   toggleModal: () => dispatch(NewGameFlowActions.toggleModal()),
